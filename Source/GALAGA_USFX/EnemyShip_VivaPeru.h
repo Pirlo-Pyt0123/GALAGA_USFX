@@ -24,4 +24,12 @@ protected:
 public:
 	// Llamado a cada cuadro (frame)
 	virtual void Tick(float DeltaTime) override;
+
+protected:
+	// Movimiento de la nave
+	virtual void Mover(float DeltaTime);
+	// Disparo de la nave
+	virtual void Disparar(FVector FireDirection);
+	// Destruccion de la nave
+	virtual void Destruirse();
 };

@@ -11,7 +11,7 @@
 AGALAGA_USFXProjectile::AGALAGA_USFXProjectile() 
 {
 	// Static reference to the mesh to use for the projectile
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ProjectileMeshAsset(TEXT("/Game/TwinStick/Meshes/TwinStickProjectile.TwinStickProjectile"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> ProjectileMeshAsset(TEXT("StaticMesh'/Game/Meshes/BulletEnemyLevel2.BulletEnemyLevel2'"));
 
 	// Create mesh component for the projectile sphere
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh0"));
@@ -34,6 +34,8 @@ AGALAGA_USFXProjectile::AGALAGA_USFXProjectile()
 	InitialLifeSpan = 3.0f;
 
 	//AmmoCount = 200;
+	//aumenta tamano 
+	ProjectileMesh->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
 }
 
 
@@ -49,8 +51,6 @@ void AGALAGA_USFXProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAc
         
         
     }
-    
-
     Destroy();
 }
 

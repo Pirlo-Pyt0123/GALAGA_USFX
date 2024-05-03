@@ -24,6 +24,8 @@ private:
 
 	virtual void buildSquadronCaza() override;
 	virtual void buildSquadronEspia() override;
+	virtual void buildSquadronHard() override;
+	virtual void buildObstacleGenerator() override;
 	
 
 protected:

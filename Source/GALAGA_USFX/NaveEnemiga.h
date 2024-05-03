@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "NaveEnemiga.generated.h"
-
 UCLASS()
 class GALAGA_USFX_API ANaveEnemiga : public AActor
 {
@@ -84,8 +84,22 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	class UParticleSystem* ExplosionParticles;
+
+	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
+	class USoundBase* ExploSound;
+
+protected:
 	// Called when the ship collides with another actor
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	//virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+public:
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+
 
 protected:
 	//virtual void Mover()=0;

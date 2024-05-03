@@ -22,9 +22,10 @@ ANaveEnemigaCaza::ANaveEnemigaCaza()
 	mallaNaveEnemiga->SetStaticMesh(ShipMesh.Object);
 
 	PrimaryActorTick.bCanEverTick = true;
-	GunOffset = FVector(90.f, 0.f, 0.f);
+	GunOffset = FVector(120.f, 0.f, 0.f);
 	FireRate = 0.1f;
 	bCanFire = true;
+
 }
 
 void ANaveEnemigaCaza::Tick(float DeltaTime)

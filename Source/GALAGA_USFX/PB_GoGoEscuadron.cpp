@@ -52,5 +52,25 @@ void APB_GoGoEscuadron::buildSquadronEspia()
 	Squadron->setSquadronEspia();
 }
 
+void APB_GoGoEscuadron::buildSquadronHard()
+{
+	if (!Squadron) {
+		UE_LOG(LogTemp, Error, TEXT("buildSquadron1(): Squadron es NULL, asegúrese de que esté inicializado."));
+		return;
+	}
+	// Construir escuadron de nivel 1
+	Squadron->setSquadronHard();
+}
+
+void APB_GoGoEscuadron::buildObstacleGenerator()
+{
+	if (!Squadron) {
+		UE_LOG(LogTemp, Error, TEXT("buildObstacleGenerator(): ObstacleGenerator es NULL, asegúrese de que esté inicializado."));
+		return;
+	}
+	// Construir generador de obstaculos
+	Squadron->setObstacleGenerator();
+}
+
 
 

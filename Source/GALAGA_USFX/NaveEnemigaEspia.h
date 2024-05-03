@@ -4,11 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "NaveEnemiga.h"
+#include "Move_naves_mediocres.h"
 #include "NaveEnemigaEspia.generated.h"
-
-/**
- * 
- */
+class UMove_naves_mediocres;
 UCLASS()
 class GALAGA_USFX_API ANaveEnemigaEspia : public ANaveEnemiga
 {
@@ -24,6 +22,9 @@ public:
 
 	FORCEINLINE void SetRangoSondeo(int _avanceEspia) { avanceEspia = _avanceEspia; }
 	virtual void Tick(float DeltaTime) override;
+
+
+	UMove_naves_mediocres* MoviminetoMediocre;
 
 protected:
 	virtual void Mover(float DeltaTime);

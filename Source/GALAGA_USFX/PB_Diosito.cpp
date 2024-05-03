@@ -21,6 +21,12 @@ void APB_Diosito::ElevandoPlegarias(FString _EscuadronCatolico)
 
 	if (_EscuadronCatolico == "Squad_Espia")
 		SquadBuilder->buildSquadronEspia();
+	
+	if (_EscuadronCatolico == "Squad_Hard")
+		SquadBuilder->buildSquadronHard();
+	if(_EscuadronCatolico =="Squad_Obstacle")
+		SquadBuilder->buildObstacleGenerator();
+
 
 	
 	

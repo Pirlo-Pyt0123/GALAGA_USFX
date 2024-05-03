@@ -19,6 +19,8 @@ public:
 public:
 	virtual void setSquadronCaza() override;
 	virtual void setSquadronEspia() override;
+	virtual void setSquadronHard() override;
+	virtual void setObstacleGenerator() override;
 	
 			
 

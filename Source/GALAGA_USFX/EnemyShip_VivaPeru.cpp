@@ -11,9 +11,29 @@ AEnemyShip_VivaPeru::AEnemyShip_VivaPeru()
 }
 void AEnemyShip_VivaPeru::BeginPlay()
 {
+	Super::BeginPlay();
+	
 
 }
 
 void AEnemyShip_VivaPeru::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	Mover(DeltaTime);
+}
+
+void AEnemyShip_VivaPeru::Mover(float DeltaTime)
+{
+	// Movimiento de la nave
+	FVector NewLocation = GetActorLocation() + (GetActorForwardVector() * speed * DeltaTime);
+	SetActorLocation(NewLocation);
+
+}
+
+void AEnemyShip_VivaPeru::Disparar(FVector FireDirection)
+{
+}
+
+void AEnemyShip_VivaPeru::Destruirse()
 {
 }

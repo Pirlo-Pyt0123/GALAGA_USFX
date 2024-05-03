@@ -20,7 +20,7 @@ const FName AGALAGA_USFXPawn::FireRightBinding("FireRight");
 
 AGALAGA_USFXPawn::AGALAGA_USFXPawn()
 {	
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("/Game/TwinStick/Meshes/TwinStickUFO.TwinStickUFO"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("StaticMesh'/Game/Mehes/NavesEnemigas/Fighter_01.Fighter_01'"));
 	// Create the mesh component
 	ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
 	RootComponent = ShipMeshComponent;
@@ -28,7 +28,7 @@ AGALAGA_USFXPawn::AGALAGA_USFXPawn()
 	ShipMeshComponent->SetStaticMesh(ShipMesh.Object);
 	
 	// Cache our sound effect
-	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/TwinStick/Audio/TwinStickFire.TwinStickFire"));
+	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("SoundWave'/Game/Sound/Laser2.Laser2'"));
 	FireSound = FireAudio.Object;
 
 	// Create a camera boom...
@@ -36,25 +36,26 @@ AGALAGA_USFXPawn::AGALAGA_USFXPawn()
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->SetUsingAbsoluteRotation(true); // Don't want arm to rotate when ship does
 	CameraBoom->TargetArmLength = 1200.f;
-	CameraBoom->SetRelativeRotation(FRotator(-80.f, 0.f, 0.f));
+	CameraBoom->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
 	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 
 	// Create a camera...
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
 	CameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	CameraComponent->bUsePawnControlRotation = false;	// Camera does not rotate relative to arm
+	CameraComponent->bUsePawnControlRotation = false;  // Camera 
 
 	// Movement
 	MoveSpeed = 1000.0f;
 	// Weapon
-	GunOffset = FVector(90.f, 0.f, 0.f);
+	GunOffset = FVector(250.f, 0.f, 0.f);
 	FireRate = 0.1f;
 	bCanFire = true;
-	NumBullets = 10;
-    Vidas = 10;
+	//NumBullets = 10;
+   // Vidas = 10;
 	// Initialize the number of bullets in the constructor
-
 	
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleAsset(TEXT("ParticleSystem'/Game/FXVarietyPack/Particles/P_ky_lightning1.P_ky_lightning1'"));
+	ExplosionParticles = ParticleAsset.Object;
 }
 
 void AGALAGA_USFXPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -71,41 +72,34 @@ void AGALAGA_USFXPawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 void AGALAGA_USFXPawn::Tick(float DeltaSeconds)
 {
     // Find movement direction
-    const float ForwardValue = GetInputAxisValue(MoveForwardBinding);
-    const float RightValue = GetInputAxisValue(MoveRightBinding);
+	const float ForwardValue = GetInputAxisValue(MoveForwardBinding);
+	const float RightValue = GetInputAxisValue(MoveRightBinding);
 
-    // Clamp max size so that (X=1, Y=1) doesn't cause faster movement in diagonal directions
-    const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
+	// Clamp max size so that (X=1, Y=1) doesn't cause faster movement in diagonal directions
+	const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
 
-    // Calculate movement
-    const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
+	// Calculate  movement
+	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
 
-    // If non-zero size, move this actor
-    if (Movement.SizeSquared() > 0.0f)
-    {
-        const FRotator NewRotation = Movement.Rotation();
-        FHitResult Hit(1.f);
-        RootComponent->MoveComponent(Movement, NewRotation, true, &Hit);
+	// If non-zero size, move this actor
+	if (Movement.SizeSquared() > 0.0f)
+	{
+		const FRotator NewRotation = Movement.Rotation();
+		FHitResult Hit(1.f);
+		RootComponent->MoveComponent(Movement, NewRotation, true, &Hit);
 
-        if (Hit.IsValidBlockingHit())
-        {
-            const FVector Normal2D = Hit.Normal.GetSafeNormal2D();
-            const FVector Deflection = FVector::VectorPlaneProject(Movement, Normal2D) * (1.f - Hit.Time);
-            RootComponent->MoveComponent(Deflection, NewRotation, true);
+		if (Hit.IsValidBlockingHit())
+		{
+			const FVector Normal2D = Hit.Normal.GetSafeNormal2D();
+			const FVector Deflection = FVector::VectorPlaneProject(Movement, Normal2D) * (1.f - Hit.Time);
+			RootComponent->MoveComponent(Deflection, NewRotation, true);
+		}
+	}
 
-            
-
-            FString Message = FString::Printf(TEXT("VIDAS RESTANTES: %d"), Vidas);
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, Message);
-            GEngine->ClearOnScreenDebugMessages();
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, Message);
-        }
-    }
-
-    // Create fire direction vector
-    const float FireForwardValue = GetInputAxisValue(FireForwardBinding);
-    const float FireRightValue = GetInputAxisValue(FireRightBinding);
-    const FVector FireDirection = FVector(FireForwardValue, FireRightValue, 0.f);
+	// Create fire direction vector
+	const float FireForwardValue = GetInputAxisValue(FireForwardBinding);
+	const float FireRightValue = GetInputAxisValue(FireRightBinding);
+	const FVector FireDirection = FVector(FireForwardValue, FireRightValue, 0.f);
 
     // Try and fire a shot
     FireShot(FireDirection);
@@ -122,12 +116,16 @@ void AGALAGA_USFXPawn::FireShot(FVector FireDirection)
 			const FRotator FireRotation = FireDirection.Rotation();
 			// Spawn projectile at an offset from this pawn
 			const FVector SpawnLocation = GetActorLocation() + FireRotation.RotateVector(GunOffset);
+			
 
 			UWorld* const World = GetWorld();
 			if (World != nullptr)
 			{
 				// spawn the projectile
 				World->SpawnActor<AGALAGA_USFXProjectile>(SpawnLocation, FireRotation);
+				
+				
+
 			}
 
 			bCanFire = false;
@@ -198,12 +196,19 @@ void AGALAGA_USFXPawn::ShotTimerExpired()
 	bCanFire = true;
 }
 
-void AGALAGA_USFXPawn::RestarVida()
+void AGALAGA_USFXPawn::AumentarVelocidad()
 {
-	Vidas--;
-	if (Vidas <= 0) {
-		Destroy();
-	}
+	MoveSpeed = 4000.0f;
 }
+
+//void AGALAGA_USFXPawn::AumentarVelocidad()
+//{
+//	MoveSpeed = 2000.0f;
+//
+//}
+
+
+
+
 
 

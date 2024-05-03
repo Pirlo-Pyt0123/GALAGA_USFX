@@ -6,9 +6,7 @@
 #include "NaveEnemiga.h"
 #include "NaveEnemigaCaza.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class GALAGA_USFX_API ANaveEnemigaCaza : public ANaveEnemiga
 {

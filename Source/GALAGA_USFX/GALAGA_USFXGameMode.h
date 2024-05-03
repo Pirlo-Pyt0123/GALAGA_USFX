@@ -11,7 +11,8 @@ class ANaveEnemiga;
 class ANaveEnemigaCaza;
 class ANaveEnemigaCazaPrime;
 class ANaveEnemigaEspiaKamikaze;
-
+class ACapsule_Furia;
+class ACapsule_Health;
 UCLASS(MinimalAPI)
 class AGALAGA_USFXGameMode : public AGameModeBase
 {
@@ -44,7 +45,10 @@ private:
 	// Propiedades para la creación de escuadrones vivaPeru
 	float SpawnSquatLevel3;
 
-
+private:
+	// propiedades para la creacion de capsulas
+	/*float inicioCapsulas;
+	float TopeCapsulas;*/
 
 
 
@@ -58,6 +62,14 @@ private:
 
 
 	virtual void Tick(float DeltaTime) override;
+
+
+
+public:
+
+	void GenerarCapsulas();
+	FTimerHandle SpawnTimerHandle;
+
 protected:
 	virtual void BeginPlay() override;
 };

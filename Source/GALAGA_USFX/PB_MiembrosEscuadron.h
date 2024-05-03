@@ -24,5 +24,7 @@ class GALAGA_USFX_API IPB_MiembrosEscuadron
 public:
 	virtual void setSquadronCaza() = 0;
 	virtual void setSquadronEspia() = 0;
+	virtual void setSquadronHard() = 0;
+	virtual void setObstacleGenerator() = 0;
 	
 };

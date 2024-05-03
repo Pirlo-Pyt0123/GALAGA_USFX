@@ -24,5 +24,8 @@ class GALAGA_USFX_API IPB_EscuadronBuild
 public:
 	virtual void buildSquadronCaza() = 0;
 	virtual void buildSquadronEspia() = 0;
+	virtual void buildSquadronHard() = 0;
+	virtual void buildObstacleGenerator() = 0;
+
 	
 };

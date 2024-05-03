@@ -4,12 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "NaveEnemigaCaza.h"
-#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "NaveEnemigaCazaPrime.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class GALAGA_USFX_API ANaveEnemigaCazaPrime : public ANaveEnemigaCaza
 {
@@ -23,13 +21,8 @@ private:
 	UPROPERTY(VisibleAnywhere);
 	FVector posicionPrime;
 
-protected:
-
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
-	class UParticleSystem* ExplosionParticles;
-
-	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
-	class USoundBase* ExploSound;
+	class UParticleSystem* PowerParticle;
 
 public:
 	virtual void Tick(float DeltaTime) override;

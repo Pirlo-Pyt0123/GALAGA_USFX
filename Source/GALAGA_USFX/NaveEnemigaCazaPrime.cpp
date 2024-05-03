@@ -13,18 +13,25 @@
 #include "Engine/CollisionProfile.h"
 #include "Engine/StaticMesh.h"
 #include "Kismet/GameplayStatics.h"
+#include "NaveEnemiga.h"
 #include "Sound/SoundBase.h"
 
 void ANaveEnemigaCazaPrime::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	Mover(DeltaTime);
+	
 }
 
 ANaveEnemigaCazaPrime::ANaveEnemigaCazaPrime()
 {
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_NarrowCapsule.Shape_NarrowCapsule'"));
+	
+	
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("StaticMesh'/Game/Mehes/NavesEnemigas/B-2_v1_obj.B-2_v1_obj'"));
 	mallaNaveEnemiga->SetStaticMesh(ShipMesh.Object);
+	
+
+
 	posicionPrime = GetActorLocation();
 
 	//agreguemos collision 
@@ -33,45 +40,47 @@ ANaveEnemigaCazaPrime::ANaveEnemigaCazaPrime()
 	mallaNaveEnemiga->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 	mallaNaveEnemiga->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> ExplosionAsset(TEXT("ParticleSystem'/Game/StarterContent/Particles/P_Explosion.P_Explosion'"));
-	ExplosionParticles = ExplosionAsset.Object;
-	//sonido explosion
-	static ConstructorHelpers::FObjectFinder<USoundBase> explosionSound(TEXT("SoundWave'/Game/StarterContent/Audio/Explosion02.Explosion02'"));
-	ExploSound = explosionSound.Object;
-	////colisionar y fiumba
+	
+	//colisionar y fiumba
 	mallaNaveEnemiga->OnComponentHit.AddDynamic(this, &ANaveEnemigaCazaPrime::FuncionDeManejoDeColision);
+
+	//agranda el mesh
+	mallaNaveEnemiga->SetWorldScale3D(FVector(1.0f, 1.0f, 3.0f));
+
+	//particulas que se generan al destruirse
+	/*static ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleAsset(TEXT("ParticleSystem'/Game/FXVarietyPack/Particles/P_ky_lightning1.P_ky_lightning1'"));
+	ExplosionParticles = ParticleAsset.Object;*/
+	
+	//aumenta el tamano de las particulas
+	
+	//particulas que se generan todo el tiempo
+	/*static ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleAsset2(TEXT("ParticleSystem'/Game/FXVarietyPack/Particles/P_ky_darkStorm.P_ky_darkStorm'"));
+	ExplosionParticles = ParticleAsset2.Object;*/
+
+
+	
+
+
 }
 
-void ANaveEnemigaCazaPrime::FuncionDeManejoDeColision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+void ANaveEnemigaCazaPrime::FuncionDeManejoDeColision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
     // Restar una vida al jugador
-    if (OtherActor->IsA(AGALAGA_USFXPawn::StaticClass()))
-    {
-        AGALAGA_USFXPawn* MiNave = Cast<AGALAGA_USFXPawn>(OtherActor);
-        if (MiNave != nullptr)
-        {
-            MiNave->RestarVida();
-        }
-    }
 
-    //// Restar una vida a la nave enemiga
-    //if (OtherActor->IsA(ANaveEnemigaCazaPrime::StaticClass()))
-    //{
-    //    ANaveEnemigaCazaPrime* NaveEnemiga = Cast<ANaveEnemigaCazaPrime>(OtherActor);
-    //    if (NaveEnemiga != nullptr)
-    //    {
-    //        NaveEnemiga->Destruirse();
-    //    }
-    //}
 
-    Destroy();
-    UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticles, GetActorLocation());
-    UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExploSound, GetActorLocation());
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+	{
+		
+		
+	}
+	Destroy();
+
+   
 }
 
 void ANaveEnemigaCazaPrime::Mover(float DeltaTime)
 {
-	ANaveEnemigaCaza::Mover(DeltaTime);
+
 	speed = 3;
 	SetActorRotation(FRotator(0, 180, vueltas));
 	vueltas += 2;

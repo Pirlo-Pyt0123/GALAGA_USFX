@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/Pawn.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "GALAGA_USFXPawn.generated.h"
 
 UCLASS(Blueprintable)
@@ -42,6 +44,9 @@ public:
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
 	class USoundBase* FireSound;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	class UParticleSystem* ExplosionParticles;
+
 	// Begin Actor Interface
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
@@ -59,8 +64,8 @@ public:
 	static const FName FireRightBinding;
 
 private:
-	int NumBullets ;
-	int32 Municion;
+	//int NumBullets ;
+	//int32 Municion;
 
 
 	/* Flag to control firing  */
@@ -70,13 +75,26 @@ private:
 	FTimerHandle TimerHandle_ShotTimerExpired;
 
 public:
+	int VidasRestantes = 3;
 
-	void RestarVida();
+	int GetVidasRestantes() const { return VidasRestantes; }
+	void AumentarVida()
+	{
+		if (VidasRestantes > 0)
+			VidasRestantes++;
+	}
+	// Función para reducir una vida del pawn
+	void ReducirVida()
+	{
+		if (VidasRestantes > 0)
+			VidasRestantes--;
+	}
+	//para aumentar la velocidad de la nave
+	void AumentarVelocidad();
+	
 
-	UFUNCTION(BlueprintPure, Category = "Municion")
-	int32 GetMunicion() const { return Municion; }
-	//float ReloadTimer;
-	int32 Vidas;
+
+	
 	/** Returns ShipMeshComponent subobject **/
 	FORCEINLINE class UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }
 	/** Returns CameraComponent subobject **/
@@ -86,6 +104,9 @@ public:
 
 
 	
+	//void Energia();
+	//FTimerHandle TimerHandle_Energia;
+
 
 };
 

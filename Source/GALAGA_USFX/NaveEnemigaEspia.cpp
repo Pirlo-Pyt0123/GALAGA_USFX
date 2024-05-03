@@ -5,10 +5,12 @@
 
 ANaveEnemigaEspia::ANaveEnemigaEspia()
 {
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("StaticMesh'/Game/Mehes/NavesEnemigas/Spaceships_10.Spaceships_10'"));
 	//// Create the mesh component
 	//mallaNaveEnemiga = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
 	mallaNaveEnemiga->SetStaticMesh(ShipMesh.Object);
+
+	MoviminetoMediocre = CreateDefaultSubobject<UMove_naves_mediocres>(TEXT("MoviminetoMediocre"));
 }
 
 void ANaveEnemigaEspia::Tick(float DeltaTime)
